@@ -1,0 +1,5 @@
+to run the server:
+npm run dev
+
+to roll up the CodeMirror dependencies:
+powershell -ExecutionPolicy Bypass node_modules/.bin/rollup src/editor.mjs -f iife -o editor.bundle.js -p @rollup/plugin-node-resolve
