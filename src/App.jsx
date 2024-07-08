@@ -88,6 +88,7 @@ def run_code(code):
     sys.stdout = sys.stderr = out
     try:
         # change next line to exec(code, {}) if you want to clear vars each time
+        #print(code)
         exec(code, {})
     except:
         traceback.print_exc()
@@ -101,18 +102,48 @@ function setup_pyodide(startcode) {
 	pyodide.runPython(startcode)
   }
 
+  /*
 languagePluginLoader.then(() => {
 	// Pyodide is now ready to use...
 	setup_pyodide(startcode)
 	pyodide.globals.code_to_run = `print("Hello World")`;
 	makeop(pyodide.runPythonAsync(`run_code(code_to_run)`));
   });
+*/
+loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
+  globalThis.pyodide = pyodide
+
+  //setup_pyodide(startcode)
+	//let code_to_run = `print("Hello World")`;
+	//makeop(pyodide.runPython(`run_code(code_to_run)`));
+  
+  // edit this for available python package imports
+  pyodide.loadPackage(['numpy']).then(() => {
+  //pyodide.runPython(`   
+  //My python code here
+
+  setup_pyodide(startcode)
+  /*
+	const code = startcode;
+  const str1 = '';
+  const str2 = str1.concat('run_code(', code, ')');
+  console.log(str2);
+	makeop(pyodide.runPython(str2)); */
+//`);
+}); });
+
 
 
 function runPython(pycode) {
 // run code currently stored in editor
-	pyodide.globals.code_to_run = pycode
-	makeop(pyodide.runPython('run_code(code_to_run)'))
+	//pyodide.globals.code_to_run = pycode
+  const code = pycode;
+  const str1 = 'run_code(';
+  const str2 = str1.concat(code, ')');
+  console.log(str2);
+	//makeop(pyodide.runPython(str2));
+  pyodide.globals.set("code_to_run", pycode);
+  makeop(pyodide.runPython('run_code(code_to_run)'));
 }
 
 function evaluatePython(pycode) {

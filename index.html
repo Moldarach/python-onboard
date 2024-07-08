@@ -119,13 +119,13 @@
 			}
 			.CodeMirror {
 				border: 1px solid gray;
-				height: 90vh;
+				height: 45vh;
 				font-size: 16px;
 			}
 			#python-out {
 				border: 1px solid gray;
 
-				height: 90vh;
+				height: 45vh;
 
 				overflow-y: auto;
 
@@ -135,7 +135,7 @@
 
 				padding-left: 30px;
 
-				padding-top: 10px;
+				padding-top: 30px;
 
 				box-sizing: border-box;
 
@@ -173,34 +173,43 @@
 		</style>
 		<script type="text/javascript">
 			window.languagePluginUrl =
-				"https://cdn.jsdelivr.net/pyodide/v0.17.0a2/full/";
+				"https://cdn.jsdelivr.net/pyodide/v0.26.1/full";
 		</script>
-		<script src="https://cdn.jsdelivr.net/pyodide/v0.17.0a2/full/pyodide.js"></script>
+		<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 		<title>PyRunBrowser</title>
 	</head>
 	<body>
 		<center class="row">
 			<a class="waves-effect waves-light btn" id="run-btn"
 				><i class="material-icons right">code</i>Run</a>
-			<a class="waves-effect waves-light btn" href="https://google.com" target="_blank"><i class="material-icons right">cloud</i>About Me!</a>
+			<a class="waves-effect waves-light btn" href="https://google.com" target="_blank"><i class="material-icons right">cloud</i>Test Code</a>
 		</center>
 		<br />
 
 		<div class="row">
-			<div class="col s6">
-				<textarea
-					name="codearea"
-					id="codearea"
-					cols="30"
-					rows="100"
-				></textarea>
-			</div>
-		
-			<div class="col s6">
-				<div id="python-out" style="white-space: pre-line"></div>
-			</div>
+				<div style="float: left; width: 50%">
+					
+				</div>
+			
+				<div style="float: right; width: 50%">
+					<div style="float: top; height: 50%">
+						<textarea
+							name="codearea"
+							id="codearea"
+							cols="30"
+							rows="100"
+						></textarea>
+					</div>
+				
+					<div style="float: bottom; height: 50%">
+						<div id="python-out" style="white-space: pre-line"></div>
+					</div>
+				</div>
+			
+			
 		</div>
-	
+
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.60.0/mode/python/python.min.js"
