@@ -1,0 +1,220 @@
+
+body, html {
+        height: 100vh;
+        box-sizing: border-box;
+        background-color: white;
+        overflow-y: hidden;
+    } 
+    .CodeMirror {
+      border-bottom: 2px solid gray;
+      height: 100% !important; 
+      font-size: 16px;
+  } 
+  #python-out {
+      border-top: 2px solid gray;
+
+      height: 45vh;
+
+      overflow-y: auto;
+
+      font-size: 16px;
+
+      background-color: black;
+
+      padding-left: 30px;
+
+      padding-top: 30px;
+
+      box-sizing: border-box;
+
+      color: white;
+
+      font-family: 'Source Code Pro', monospace;
+/*
+      animation-duration: 1.0s;
+
+      animation-name: colorthing;
+
+      animation-iteration-count: infinite;
+
+      animation-direction: alternate;
+      */
+  }
+  @keyframes colorthing {
+
+      from {
+
+      color: rgb(0, 255, 0);               		
+      }
+
+      to {
+
+      color: rgb(14, 161, 14);
+
+      }
+
+      }
+  .btn {
+      margin-top: 12px;
+      margin-left: 10px;
+  }
+
+  .btn:hover {
+      color: #04AA6D;
+      background-color: white;
+    }
+
+
+  .navbar {
+      display: flex;
+      color: #F9FAF8;
+      background-color: #1F2937;
+      padding: 20px 0px 20px 100px;
+      align-items: center;
+      height: 5vh;
+  }
+  
+  .header-logo {
+      width: 84px;
+      height: 84px;
+      margin-right: auto;
+      margin-bottom: 42px;
+  }
+  
+  .header-link {
+      display: flex;
+      margin-left: auto;
+      padding: 0px 100px 0px 0px;  
+  }
+  
+  .header-link a {
+      text-decoration: none;
+      color: #E5E7EB;
+      font-size: 18px;
+      /* padding: 10px; */
+      font-family: 'Roboto', arial;
+  }
+
+    
+  /* For the tabs */
+  .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+
+    .tabcontent {
+      animation: fadeEffect 1s; /* Fading effect takes 1 second */
+    }
+    
+    /* Go from zero to full opacity */
+    @keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+
+
+
+/* The side navigation menu */
+.sidenavbar {
+  height: 100%; /* 100% Full-height */
+  width: 0px; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 5; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenavbar */
+}
+
+/* The navigation menu links */
+  .sidenavbar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    text-align: center;
+  }
+
+  /* When you mouse over the navigation links, change their color */
+  .sidenavbar a:hover {
+    color: #f1f1f1;
+  }
+
+  /* Position and style the close button (top right corner) */
+  .sidenavbar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    transition: margin-left .5s;
+    padding: 20px;
+  }
+
+  /* On smaller screens, where height is less than 450px, change the style of the sidenavbar (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenavbar {padding-top: 15px;}
+    .sidenavbar a {font-size: 18px;}
+  }
+
+
+
+  .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }

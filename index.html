@@ -82,142 +82,144 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Python Onboard</title>
+		<link rel="stylesheet" href="styles.css">
+		<script defer type="text/javascript">
+			window.languagePluginUrl =
+				"https://cdn.jsdelivr.net/pyodide/v0.26.1/full";
+		</script>
+		<script defer src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 		<link rel="preconnect" href="https://fonts.gstatic.com" />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap"
 			rel="stylesheet"
 		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-		/>
 
 		
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
 		/>
+		
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/base16-dark.css"
 		/>
+	
 		<link
 			href="https://fonts.googleapis.com/icon?family=Material+Icons"
 			rel="stylesheet"
 		/>
 
-		<style>
-			body,
-			html {
-				height: 100vh;
-				box-sizing: border-box;
-				background-color: white;
-			}
-			.CodeMirror {
-				border: 1px solid gray;
-				height: 45vh;
-				font-size: 16px;
-			}
-			#python-out {
-				border: 1px solid gray;
-
-				height: 45vh;
-
-				overflow-y: auto;
-
-				font-size: 16px;
-
-				background-color: black;
-
-				padding-left: 30px;
-
-				padding-top: 30px;
-
-				box-sizing: border-box;
-
-				color: white;
-
-				font-family: 'Source Code Pro', monospace;
-/*
-				animation-duration: 1.0s;
-
-				animation-name: colorthing;
-
-				animation-iteration-count: infinite;
-
-				animation-direction: alternate;
-				*/
-			}
-			@keyframes colorthing {
-
-				from {
-
-				color: rgb(0, 255, 0);               		
-				}
-
-				to {
-
-				color: rgb(14, 161, 14);
-
-				}
-
-				}
-			.btn {
-				margin-top: 12px;
-				margin-left: 10px;
-			}
-		</style>
-		<script type="text/javascript">
-			window.languagePluginUrl =
-				"https://cdn.jsdelivr.net/pyodide/v0.26.1/full";
-		</script>
-		<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
-		<title>PyRunBrowser</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+		/>
 	</head>
 	<body>
+		<div id="mySidenav" class="sidenavbar">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<a href="#">About</a>
+			<a href="#">Services</a>
+			<a href="#">Clients</a>
+			<a href="#">Contact</a>
+		</div>
+		<nav class="navbar">
+			<div class="header-logo">
+				<h2>icon</h2>
+			</div>
+			<div class="header-link">
+				<!--
+				<a href="#">About</a>
+				<a href="#">Shop</a>
+				<a href="#">Contact</a> 
+			-->
+				<!--
+				<a class="waves-effect waves-light btn" id="run-btn">
+					<i class="material-icons right">code</i>Run</a>
+				<a class="waves-effect waves-light btn" href="https://google.com" target="_blank">
+					<i class="material-icons right">cloud</i>Test Code</a> 
+				-->
+				<button class="btn" id="run-btn">Run</button>
+			</div>
+		</nav>
+<!--
 		<center class="row">
-			<a class="waves-effect waves-light btn" id="run-btn"
-				><i class="material-icons right">code</i>Run</a>
-			<a class="waves-effect waves-light btn" href="https://google.com" target="_blank"><i class="material-icons right">cloud</i>Test Code</a>
+			 	
 		</center>
 		<br />
-
+	-->	
+		
+		
 		<div class="row">
-				<div style="float: left; width: 50%">
+			
+			  
+			  
+
+
+			<div class="content" style="float: left; width: 50%">
+				<!--
+				<object data="./cmd_instr.txt" width="100%" height="100%">
+					Not supported
+				</object>
+			-->
+				<div class="tab">
 					
+					<button class="tablinks" onclick="openNav()">===</button>
+					
+					<button class="tablinks" onclick="openCity(event, 'London')">London</button>
+					<button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+					<button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+					</div>
+					
+					<!-- Tab content -->
+					<div id="London" class="tabcontent">
+					<h3>London</h3>
+					<p>London is the capital city of England.</p>
+					</div>
+					
+					<div id="Paris" class="tabcontent">
+					<h3>Paris</h3>
+					<p>Paris is the capital of France.</p>
+					</div>
+					
+					<div id="Tokyo" class="tabcontent">
+					<h3>Tokyo</h3>
+					<p>Tokyo is the capital of Japan.</p>
+					</div>
+
+			</div>
+		
+			<div style="float: right; width: 50%; height: 100vh">
+				<div style="float: top; height: 50%">
+					<textarea
+						name="codearea"
+						id="codearea"
+						cols="30"
+						rows="100"
+					></textarea>
 				</div>
 			
-				<div style="float: right; width: 50%">
-					<div style="float: top; height: 50%">
-						<textarea
-							name="codearea"
-							id="codearea"
-							cols="30"
-							rows="100"
-						></textarea>
-					</div>
-				
-					<div style="float: bottom; height: 50%">
-						<div id="python-out" style="white-space: pre-line"></div>
-					</div>
+				<div style="float: bottom; height: 50%">
+					<div id="python-out" style="white-space: pre-line"></div>
 				</div>
+			</div>
 			
 			
 		</div>
 
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
-		<script
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
+		<script defer
 			src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.60.0/mode/python/python.min.js"
 			integrity="sha512-jKm248sXyXbgbigmg1qdHZ7sKnQwpI2CW4Bv1DXbWHWcXRw7nafIjv8dxhbdt5wS0JGrwjxj+hBUEseM/PnjUA=="
 			crossorigin="anonymous"
 		></script>
 	
-		<script src="src/App.jsx"></script>
+		<script defer src="src/App.jsx"></script>
 	
 	</body>
 </html>
