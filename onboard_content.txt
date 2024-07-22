@@ -1,0 +1,28 @@
+onboard topics to cover:
+
+i guess at the very start say what python is
+and how you need packages (math, cmath, numpy, scipy, maybe matplotlib)
+mention how numpy, scipy are external packages
+tell people how to install python correctly
+encourage installing jupyter/anaconda since it'll include numpy
+also because it's a good idea for ee 241 which you need to graduate
+i guess if you really don't want to install anything, you can use an online REPL like here:
+https://pyodide.org/en/stable/console.html
+
+i think i intend to make this onboard teach you the python you should know for this class rather 
+than everything you should actually know to do scientific-computing: explore further or take amath
+courses if interested
+
+	onboard content:
+basic python, like indenting, how to print, general syntax
+
+arrays (vectors i guess), and matrices
+array indexing
+solving matrices (good for solving node voltage and mesh current)
+
+complex numbers in python 
+getting abs and phase of complex numbers
+note switching between degrees and radians
+
+partial fraction decomp (scipy residue)
+

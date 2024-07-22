@@ -8,6 +8,6 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
-# Credits
+## Credits
 - W3Schools for the [sidebar](https://www.w3schools.com/howto/howto_js_sidenav.asp#) and [tabs](https://www.w3schools.com/howto/howto_js_tabs.asp) code
 - ritabratamaiti for the embedded Python interpeter code, which I largely lifted from their [pyRunBrowser project](https://github.com/ritabratamaiti/pyRunBrowser/tree/main). I changed a few small things such as the Pyodide version.

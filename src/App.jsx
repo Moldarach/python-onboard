@@ -40,6 +40,7 @@ export default App
 
 let pyop = document.querySelector("#python-out");
 let runBtn = document.querySelector("#run-btn");
+let testBtn = document.querySelector("#test-btn");
 
 const codemirrorEditor = CodeMirror.fromTextArea(
 	document.querySelector("#codearea"),
@@ -50,7 +51,7 @@ const codemirrorEditor = CodeMirror.fromTextArea(
 	}
 );
 
-codemirrorEditor.setValue(`print("Hello World")`)
+codemirrorEditor.setValue(`print("Hello World")\nimport os\nimport math\nprint("hi")`)
 
 function makeop(s){
 	console.log(s);
@@ -61,6 +62,13 @@ runBtn.addEventListener("click", (e) => {
 	let pycode = codemirrorEditor.getValue();
 	//pyop.innerHTML = "";
 	runPython(pycode);
+})
+
+testBtn.addEventListener("click", (e) => {
+	let pycode = codemirrorEditor.getValue();
+	//pyop.innerHTML = "";
+	runPython(pycode);
+  console.log(pyodide.globals);
 })
 
 /*
@@ -80,19 +88,43 @@ runPython(pycode);
 let startcode = `
 import sys, io, traceback
 namespace = {}  # use separate namespace to hide run_code, modules, etc.
+allowed_imports = {"math": True, "cmath": True, "numpy": True}
+
 def run_code(code):
     """run specified code and return stdout and stderr"""
     out = io.StringIO()
     oldout = sys.stdout
     olderr = sys.stderr
     sys.stdout = sys.stderr = out
-    try:
-        # change next line to exec(code, {}) if you want to clear vars each time
-        #print(code)
-        exec(code, {})
-    except:
-        traceback.print_exc()
+    # do not allow multi-statement lines
+    # for security purposes
+    if (";" not in code):
+      #raw = repr(code)[1:-1]
+      #src = code
+      #print("raw: ", src)
+      lines = code.splitlines()
+      #print("list: ", lines)
 
+      line_number = 1
+      # parse input and check for illegal imports
+      for word in lines:
+        if (word.find("import") == 0):
+          imports = word[len("import"):].split(",")
+          #print("imports: ", imports)
+          for i in imports:
+            if i.strip() not in allowed_imports:
+              out.write("Illegal import " + i + " on line " + str(line_number) + ".\\n")
+              return out.getvalue()
+        line_number += 1
+
+      try:
+          # change next line to exec(code, {}) if you want to clear vars each time
+          #print("code: ", repr(code))
+          exec(code, globals())
+      except:
+          traceback.print_exc()
+    else:
+      out.write("Please do not use semicolons")
     sys.stdout = oldout
     sys.stderr = olderr
     return out.getvalue()
@@ -118,10 +150,11 @@ loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((
 	//makeop(pyodide.runPython(`run_code(code_to_run)`));
   
   // edit this for available python package imports
-  pyodide.loadPackage(['numpy']).then(() => {
+  //pyodide.loadPackage(['numpy']).then(() => {
+  pyodide.loadPackage([]).then(() => {
   //pyodide.runPython(`   
   //My python code here
-
+  console.log("finished loading packages");
   setup_pyodide(startcode)
   /*
 	const code = startcode;
@@ -153,28 +186,31 @@ function evaluatePython(pycode) {
 }
 
   //export default App
+let globalTopic = 'syntax';
 
   //for tabs
-  function openCity(evt, cityName) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-  
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-  
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-  
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
+function openCity(evt, cityName) {
+  // Declare all variables
+  let i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
   }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+
+  f(cityName, globalTopic);
+}
 
   //for sidebar
   /* Set the width of the side navigation to 250px */
@@ -185,4 +221,19 @@ function openNav() {
 /* Set the width of the side navigation to 0 */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
+}
+
+function f(id, topic) {
+  path = "../content/" + topic + "/" + id + ".txt";
+  fetch(path)
+  .then((res) => res.text())
+  .then((text) => {
+    // do something with "text"
+    console.log(text);
+    const thing = document.getElementById(id).getElementsByClassName("tabbody");
+    console.log(thing);
+    console.log(thing[0].outerText);
+    thing[0].outerText = text;
+   })
+  .catch((e) => console.error(e));
 }

@@ -1,0 +1,2 @@
+Let's start off with something basic.
+Set a variable with name 'x' equal to 5.
