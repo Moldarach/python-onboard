@@ -37,6 +37,7 @@ function App() {
 export default App
 */
 
+const NUM_DEFAULT_IMPORTS = 13;
 
 let pyop = document.querySelector("#python-out");
 let runBtn = document.querySelector("#run-btn");
@@ -51,7 +52,7 @@ const codemirrorEditor = CodeMirror.fromTextArea(
 	}
 );
 
-codemirrorEditor.setValue(`print("Hello World")\nimport os\nimport math\nprint("hi")`)
+codemirrorEditor.setValue(`print("Hello World")\nimport math\nexec("print(\\\"help\\\")")\nx=10\ny=True`)
 
 function makeop(s){
 	console.log(s);
@@ -69,6 +70,9 @@ testBtn.addEventListener("click", (e) => {
 	//pyop.innerHTML = "";
 	runPython(pycode);
   console.log(pyodide.globals);
+  const button = e.target;
+  const parent = button.parentNode;
+  checkSubmission(parent.id, globalTopic);
 })
 
 /*
@@ -87,11 +91,12 @@ runPython(pycode);
 
 let startcode = `
 import sys, io, traceback
-namespace = {}  # use separate namespace to hide run_code, modules, etc.
-allowed_imports = {"math": True, "cmath": True, "numpy": True}
+#namespace = {}  # use separate namespace to hide run_code, modules, etc.
 
 def run_code(code):
     """run specified code and return stdout and stderr"""
+    allowed_imports = {"math": True, "cmath": True, "numpy": True}
+
     out = io.StringIO()
     oldout = sys.stdout
     olderr = sys.stderr
@@ -120,7 +125,7 @@ def run_code(code):
       try:
           # change next line to exec(code, {}) if you want to clear vars each time
           #print("code: ", repr(code))
-          exec(code, globals())
+          exec(code, globals() )
       except:
           traceback.print_exc()
     else:
@@ -150,8 +155,8 @@ loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((
 	//makeop(pyodide.runPython(`run_code(code_to_run)`));
   
   // edit this for available python package imports
-  //pyodide.loadPackage(['numpy']).then(() => {
-  pyodide.loadPackage([]).then(() => {
+  pyodide.loadPackage(['numpy']).then(() => {
+  //pyodide.loadPackage([]).then(() => {
   //pyodide.runPython(`   
   //My python code here
   console.log("finished loading packages");
@@ -209,7 +214,7 @@ function openCity(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 
-  f(cityName, globalTopic);
+  updateLesson(cityName, globalTopic);
 }
 
   //for sidebar
@@ -223,7 +228,8 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
-function f(id, topic) {
+/* set the lesson content body to the correct text file */
+function updateLesson(id, topic) {
   path = "../content/" + topic + "/" + id + ".txt";
   fetch(path)
   .then((res) => res.text())
@@ -232,8 +238,78 @@ function f(id, topic) {
     console.log(text);
     const thing = document.getElementById(id).getElementsByClassName("tabbody");
     console.log(thing);
-    console.log(thing[0].outerText);
+    //console.log(thing[0].outerText);
     thing[0].outerText = text;
    })
   .catch((e) => console.error(e));
 }
+
+async function checkSubmission(id, topic) {
+  console.log("enter checkSub");
+  console.log(id +", " + topic);
+  path = "../content/" + topic + "/" + id + "_sol.txt";
+  fetch(path)
+  .then((res) => res.text())
+  .then(async (text) => {
+    // parse text to get each line
+    console.log(JSON.stringify(text));
+    const lines = text.split("\r\n");
+    console.log(lines);
+
+    let map = pyodide.globals.toJs();
+    keys = map.keys().toArray();
+    for (let i = NUM_DEFAULT_IMPORTS; i < keys.length; i ++) {
+      console.log(keys[i], map[keys[i]]);
+    }
+
+    const request = new Request('http://localhost:8000/', {
+      method: "POST",
+      body: JSON.stringify({ username: "test"}),
+    });
+    /*
+    const response = await fetch(request);
+    let js = await response.json();
+    console.log("first " + js);
+    console.log("received " + await JSON.parse(js));
+*/
+/*
+fetch(request)
+  .then(response => response.text()) // Parse the text from the response
+  .then(data => {
+      console.log(data); // Use the text data
+  })
+  .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+});
+*/
+fetch(request)
+    .then(response => {
+        if (!response.ok) {
+            // Handle HTTP errors
+            throw new Error('Network error ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+        console.log(data); // Use the JSON data
+    })
+    .catch(error => {
+        console.error('Fetch error ', error);
+    });
+
+
+
+
+    // update the result
+    const thing = document.getElementById(id).getElementsByClassName("result");
+    console.log(thing);
+    //console.log(thing[0].outerText);
+    thing[0].style.visibility='visible';
+  
+   })
+  .catch((e) => console.error(e));
+}
+
+window.addEventListener('load', () => {
+  console.log("fully loaded");
+})

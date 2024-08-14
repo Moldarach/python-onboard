@@ -56,7 +56,7 @@ body, html {
       }
   .btn {
       margin-top: 12px;
-      margin-left: 10px;
+      margin-left: 0px;
   }
 
   .btn:hover {
@@ -203,4 +203,8 @@ body, html {
       background-color: white;
       color: black;
   }
+}
+
+.result {
+  visibility: hidden;
 }
