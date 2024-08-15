@@ -244,6 +244,25 @@ function updateLesson(id, topic) {
   .catch((e) => console.error(e));
 }
 
+function replacer(key, value) {
+  if(value instanceof Map) {
+    return {
+      dataType: 'Map',
+      value: Array.from(value.entries()), // or with spread: value: [...value]
+    };
+  } else {
+    return value;
+  }
+}
+function reviver(key, value) {
+  if(typeof value === 'object' && value !== null) {
+    if (value.dataType === 'Map') {
+      return new Map(value.value);
+    }
+  }
+  return value;
+}
+
 async function checkSubmission(id, topic) {
   console.log("enter checkSub");
   console.log(id +", " + topic);
@@ -256,32 +275,29 @@ async function checkSubmission(id, topic) {
     const lines = text.split("\r\n");
     console.log(lines);
 
+    let short_map = new Map();
     let map = pyodide.globals.toJs();
     keys = map.keys().toArray();
     for (let i = NUM_DEFAULT_IMPORTS; i < keys.length; i ++) {
       console.log(keys[i], map[keys[i]]);
+      short_map.set(keys[i], map[keys[i]]);
     }
+
+    const str = JSON.stringify(short_map, replacer);
+    const newValue = JSON.parse(str, reviver);
+    console.log("here");
+    console.log(short_map);
+    console.log('break1');
+    console.log(str);
+    console.log('break2');
+    console.log(newValue);
 
     const request = new Request('http://localhost:8000/', {
       method: "POST",
-      body: JSON.stringify({ username: "test"}),
+      //body: JSON.stringify({ username: "test"}),
+      body: str,
     });
-    /*
-    const response = await fetch(request);
-    let js = await response.json();
-    console.log("first " + js);
-    console.log("received " + await JSON.parse(js));
-*/
-/*
-fetch(request)
-  .then(response => response.text()) // Parse the text from the response
-  .then(data => {
-      console.log(data); // Use the text data
-  })
-  .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
-});
-*/
+    
 fetch(request)
     .then(response => {
         if (!response.ok) {

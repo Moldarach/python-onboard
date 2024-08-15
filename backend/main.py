@@ -1,5 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+import json
+
+
+logger = logging.getLogger('uvicorn.error')
+logger.setLevel(logging.DEBUG)
 
 app = FastAPI()
 
@@ -20,4 +26,7 @@ async def root():
 @app.post("/")
 async def root(request: Request):
     #return {"message": "posted"}
-    return await request.json()
+    js = await request.json()
+    logger.debug(json.dumps(js, indent=1))
+
+    return js
