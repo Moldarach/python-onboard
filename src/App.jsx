@@ -134,7 +134,7 @@ def run_code(code):
     sys.stderr = olderr
     return out.getvalue()
 `
-function setup_pyodide(startcode) {
+ function setup_pyodide(startcode) {
 	// setup pyodide environment to run code blocks as needed
 	pyodide.runPython(startcode)
   }
@@ -147,7 +147,7 @@ languagePluginLoader.then(() => {
 	makeop(pyodide.runPythonAsync(`run_code(code_to_run)`));
   });
 */
-loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
+ loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
   globalThis.pyodide = pyodide
 
   //setup_pyodide(startcode)
@@ -192,6 +192,7 @@ function evaluatePython(pycode) {
 
   //export default App
 let globalTopic = 'syntax';
+let globalId;
 
   //for tabs
 function openCity(evt, cityName) {
@@ -214,6 +215,7 @@ function openCity(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 
+  // @TODO fix this to not use globalTopic
   updateLesson(cityName, globalTopic);
 }
 
@@ -230,6 +232,7 @@ function closeNav() {
 
 /* set the lesson content body to the correct text file */
 function updateLesson(id, topic) {
+  
   path = "../content/" + topic + "/" + id + ".txt";
   fetch(path)
   .then((res) => res.text())
@@ -246,10 +249,21 @@ function updateLesson(id, topic) {
 
 function replacer(key, value) {
   if(value instanceof Map) {
+    const arr = Array.from(value.entries());
+    console.log('replacing ', arr);
+    console.log('is array? ', Array.isArray(arr[0]));
+    json_obj = {};
+    json_obj['GLOBAL_TOPIC'] = globalTopic;
+    json_obj['GLOBAL_ID'] = globalId;
+    for (const curr of arr) {
+      json_obj[curr[0]] = curr[1];
+    }
+    return json_obj;
+/*
     return {
       dataType: 'Map',
       value: Array.from(value.entries()), // or with spread: value: [...value]
-    };
+    }; */
   } else {
     return value;
   }
@@ -264,66 +278,81 @@ function reviver(key, value) {
 }
 
 async function checkSubmission(id, topic) {
+  globalId = id;
+  globalTopic = topic;
   console.log("enter checkSub");
   console.log(id +", " + topic);
-  path = "../content/" + topic + "/" + id + "_sol.txt";
-  fetch(path)
-  .then((res) => res.text())
-  .then(async (text) => {
-    // parse text to get each line
-    console.log(JSON.stringify(text));
-    const lines = text.split("\r\n");
-    console.log(lines);
-
-    let short_map = new Map();
-    let map = pyodide.globals.toJs();
-    keys = map.keys().toArray();
-    for (let i = NUM_DEFAULT_IMPORTS; i < keys.length; i ++) {
-      console.log(keys[i], map[keys[i]]);
-      short_map.set(keys[i], map[keys[i]]);
+  
+  let short_map = new Map();
+  let map = pyodide.globals.toJs();
+  keys = map.keys().toArray();
+  for (let i = NUM_DEFAULT_IMPORTS; i < keys.length; i ++) {
+    const key = keys[i];
+    const val = map[key];
+    console.log(key, val, typeof(val));
+    if (typeof(val) === 'object') {
+      // only add obj if it is an Int32Array or normal array
+      if (val.constructor === Int32Array || Array.isArray(val)) {
+        short_map.set(key, val);
+      }
+    } else {
+      short_map.set(key, val);
     }
+  }
 
-    const str = JSON.stringify(short_map, replacer);
-    const newValue = JSON.parse(str, reviver);
-    console.log("here");
-    console.log(short_map);
-    console.log('break1');
-    console.log(str);
-    console.log('break2');
-    console.log(newValue);
+  const str = JSON.stringify(short_map, replacer);
+  const newValue = JSON.parse(str, reviver);
+  console.log("here");
+  console.log(short_map);
+  console.log('break1');
+  console.log(str);
+  console.log('break2');
+  console.log(newValue);
 
-    const request = new Request('http://localhost:8000/', {
-      method: "POST",
-      //body: JSON.stringify({ username: "test"}),
-      body: str,
-    });
-    
-fetch(request)
+  const request = new Request('http://localhost:8000/', {
+    method: "POST",
+    //body: JSON.stringify({ username: "test"}),
+    body: str,
+  });
+  //first get access to elements
+  const container = document.getElementById(id).getElementsByClassName("result");
+  const word = document.getElementById('help');
+  const icon = document.getElementById(id).getElementsByClassName("material-icons left");
+  //const icon = document.getElementById('result_status');
+  console.log('container is ', container);
+  console.log('word is ', word);
+  console.log('icon is ', icon);
+  fetch(request)
     .then(response => {
-        if (!response.ok) {
-            // Handle HTTP errors
-            throw new Error('Network error ' + response.statusText);
-        }
-        return response.json(); // Parse the JSON from the response
+      if (!response.ok) {
+        // Handle HTTP errors
+        throw new Error('Network error ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
     })
     .then(data => {
         console.log(data); // Use the JSON data
+        container[0].style.visibility='visible';
+        if (data['status'] === 'good') {
+          icon[0].textContent = 'check';
+          icon[0].style.color = 'green'
+          word.textContent = 'correct!'
+        } else {
+          icon[0].textContent = 'close';
+          icon[0].style.color = 'red'
+          word.textContent = 'wrong'
+        }
+        
     })
-    .catch(error => {
-        console.error('Fetch error ', error);
-    });
+  .catch(error => {
+      console.error('Fetch error ', error);
+  });
 
-
-
-
-    // update the result
-    const thing = document.getElementById(id).getElementsByClassName("result");
-    console.log(thing);
-    //console.log(thing[0].outerText);
-    thing[0].style.visibility='visible';
+  // update the result
   
-   })
-  .catch((e) => console.error(e));
+  
+  //console.log(thing[0].outerText);
+  
 }
 
 window.addEventListener('load', () => {

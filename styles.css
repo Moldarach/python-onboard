@@ -149,7 +149,7 @@ body, html {
 /* The side navigation menu */
 .sidenavbar {
   height: 100%; /* 100% Full-height */
-  width: 0px; /* 0 width - change this with JavaScript */
+  width: 0px; /* 0px width - make 100% to start with it open */
   position: fixed; /* Stay in place */
   z-index: 5; /* Stay on top */
   top: 0; /* Stay at the top */

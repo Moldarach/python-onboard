@@ -1,83 +1,3 @@
-<!--
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
--->
-
-<!--
-<!doctype html>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
-  
-	<meta charset="UTF-8">
-	<h1>CodeMirror!</h1>
-
-	<body>
-		<p>
-		  You can execute any Python code. Just enter something in the box below and
-		  click the button.
-		</p>
-		<input id="code" value="sum([1, 2, 3, 4, 5])" />
-		<button onclick="evaluatePython()">Run</button>
-		<br />
-		<br />
-		<div>Outputs:</div>
-		<textarea id="output" style="width: 100%;" rows="6" disabled></textarea>
-	
-		<script type="module">
-			import {editor} from './src/editor.mjs';
-		  const output = document.getElementById("output");
-		  const code = document.getElementById("code");
-		  const val = document.getElementById("editor");
-	
-		  function addToOutput(s) {
-			//output.value += ">>>" + code.value + "\n" + s + "\n";
-			output.value += s + "\n";
-		  }
-	
-		  output.value = "Initializing...\n";
-		  // init Pyodide
-		  async function main() {
-			let pyodide = await loadPyodide();
-
-			pyodide.globals.set('print', s => console.log(s))
-
-			output.value += "Ready!\n";
-			return pyodide;
-		  }
-		  let pyodideReadyPromise = main();
-	
-		  async function evaluatePython() {
-			let pyodide = await pyodideReadyPromise;
-			try {
-			  //let output = pyodide.runPython(code.value);
-				console.log(JSON.stringify(editor.state.doc.toString()));
-				let separateLines = editor.state.doc.toString().split(/\r?\n|\r|\n/g);
-				//let output = pyodide.runPython(separateLines[0]);
-			  let output = pyodide.runPython(editor.state.doc.toString());
-				//let output = pyodide.runPython(editor.getValue());
-				console.log(output);
-
-			  addToOutput(output);
-			} catch (err) {
-			  addToOutput(err);
-			}
-		  }
-			window.evaluatePython = evaluatePython;
-		</script>
-	  </body>
-	
-	-->
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -128,7 +48,7 @@
 			<a href="#">Arrays</a>
 			<a href="#">Matrics</a>
 			<a href="#">Complex Numbers</a>
-			<a href="#">PFD</a>
+			<a href="#">Partial Fraction Decomposition</a>
 
 		</div>
 		<nav class="navbar">
@@ -188,7 +108,9 @@
 						<p></p>
 						<button class="btn" id="test-btn">Run</button>
 						<p class="result">
-							<i class="material-icons left" style="color: green;">check</i> last</p>
+							<i id="result_status" class="material-icons left" style="color: green;">check</i> 
+							<text id="help">last</text>
+						</p>
 					</div>
 					
 					<div id="T2" class="tabcontent">
