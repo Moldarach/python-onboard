@@ -195,7 +195,8 @@ let globalTopic = 'syntax';
 let globalId;
 
   //for tabs
-function openCity(evt, cityName) {
+function openTab(evt, cityName) {
+  
   // Declare all variables
   let i, tabcontent, tablinks;
 
@@ -211,12 +212,32 @@ function openCity(evt, cityName) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
 
+  
   // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(cityName).style.display = "block";
+  document.getElementById('T1').style.display = "block";
   evt.currentTarget.className += " active";
-
   // @TODO fix this to not use globalTopic
   updateLesson(cityName, globalTopic);
+}
+
+/* set the lesson content body to the correct text file */
+function updateLesson(id, topic) {
+  
+  path = "../content/" + topic + "/" + id + ".txt";
+  fetch(path)
+  .then((res) => res.text())
+  .then((text) => {
+    // do something with "text"
+    console.log(text);
+    //const thing = document.getElementById(id).getElementsByClassName("tabbody");
+    const thing = document.getElementById('T1').getElementsByClassName("tabbody");
+    console.log(thing);
+    console.log(thing[0]);
+    //thing[0].outerText = text;
+    thing[0].innerHTML = text;
+    //thing[0].setAttribute('class', 'tabbody');
+   })
+  .catch((e) => console.error(e));
 }
 
   //for sidebar
@@ -230,21 +251,21 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
-/* set the lesson content body to the correct text file */
-function updateLesson(id, topic) {
+function updateTopic(evt, topic) {
+  if (topic === 'T1') {
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 1; i < tablinks.length; i++) {
+      tablinks[i].style.display = "none";
+    }
+  } else if (topic === 'T2') {
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 1; i < tablinks.length; i++) {
+      tablinks[i].style.display = "block";
+    }
+  }
   
-  path = "../content/" + topic + "/" + id + ".txt";
-  fetch(path)
-  .then((res) => res.text())
-  .then((text) => {
-    // do something with "text"
-    console.log(text);
-    const thing = document.getElementById(id).getElementsByClassName("tabbody");
-    console.log(thing);
-    //console.log(thing[0].outerText);
-    thing[0].outerText = text;
-   })
-  .catch((e) => console.error(e));
+  globalTopic = topic;
+  closeNav();
 }
 
 function replacer(key, value) {
@@ -332,7 +353,8 @@ async function checkSubmission(id, topic) {
     })
     .then(data => {
         console.log(data); // Use the JSON data
-        container[0].style.visibility='visible';
+        //container[0].style.visibility='visible';
+        container[0].style.display='block';
         if (data['status'] === 'good') {
           icon[0].textContent = 'check';
           icon[0].style.color = 'green'

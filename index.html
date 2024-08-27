@@ -44,11 +44,11 @@
 		<div id="mySidenav" class="sidenavbar">
 			<a href="#" class="closebtn" onclick="closeNav()">&times;</a>
 			<a href="#">Intro to Python</a>
-			<a href="#">Basic Syntax</a>
-			<a href="#">Arrays</a>
-			<a href="#">Matrics</a>
-			<a href="#">Complex Numbers</a>
-			<a href="#">Partial Fraction Decomposition</a>
+			<a href="javascript:void(0);" onclick="updateTopic(event, 'syntax')" >Basic Syntax</a>
+			<a href="javascript:void(0);" onclick="updateTopic(event, 'arrays')">Arrays</a>
+			<a href="javascript:void(0);" onclick="updateTopic(event, 'matrices')">Matrics</a>
+			<a href="javascript:void(0);" onclick="updateTopic(event, 'complex')">Complex Numbers</a>
+			<a href="javascript:void(0);" onclick="updateTopic(event, 'pfd')">Partial Fraction Decomposition</a>
 
 		</div>
 		<nav class="navbar">
@@ -93,39 +93,30 @@
 			-->
 				<div class="tab">
 					
-					<button class="tablinks" onclick="openNav()">===</button>
-					
-					<button class="tablinks" onclick="openCity(event, 'T1')">London</button>
-					<button class="tablinks" onclick="openCity(event, 'T2')">Paris</button>
-					<button class="tablinks" onclick="openCity(event, 'T3')">Tokyo</button>
+				<button class="tablinks" onclick="openNav()">===</button>
+				<!--
+				<button class="tablinks" onclick="openTab(event, 'T1')">London</button>
+				-->
+				<button class="tablinks" onclick="openTab(event, 'T1')">T1</button>
+				<button class="tablinks" onclick="openTab(event, 'T2')">T2</button>
+				<button class="tablinks" onclick="openTab(event, 'T3')">T3</button>
+				<button class="tablinks" onclick="openTab(event, 'T4')">T4</button>
+				<button class="tablinks" onclick="openTab(event, 'T5')">T5</button>
+				<button class="tablinks" onclick="openTab(event, 'T6')">T6</button>
 
-					</div>
+				</div>
 					
 					<!-- Tab content -->
-					<div id="T1" class="tabcontent">
-						<h3 class="tabtitle">1</h3>
-						<p class="tabbody"></p>
-						<p></p>
-						<button class="btn" id="test-btn">Run</button>
-						<p class="result">
-							<i id="result_status" class="material-icons left" style="color: green;">check</i> 
-							<text id="help">last</text>
-						</p>
-					</div>
-					
-					<div id="T2" class="tabcontent">
-						<h3 class="tabtitle">2</h3>
-						<p class="tabbody"></p>
-						<p></p>
-					</div>
-					
-					<div id="T3" class="tabcontent">
-						<h3 class="tabtitle">3</h3>
-						<p class="tabbody"></p>
-						<p></p>
-					</div>
-
-
+				<div id="T1" class="tabcontent">
+					<h3 class="tabtitle">1</h3>
+					<p class="tabbody"></p>
+					<p></p>
+					<button class="btn" id="test-btn">Run</button>
+					<p class="result">
+						<i id="result_status" class="material-icons left" style="color: green;">check</i> 
+						<text id="help">last</text>
+					</p>
+				</div>
 			</div>
 		
 			<div style="float: right; width: 50%; height: 100vh">

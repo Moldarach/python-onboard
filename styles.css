@@ -133,6 +133,10 @@ body, html {
       border-top: none;
     }
 
+    .tabbody {
+      white-space: pre-line;
+    }
+
     .tabcontent {
       animation: fadeEffect 1s; /* Fading effect takes 1 second */
     }
@@ -206,5 +210,6 @@ body, html {
 }
 
 .result {
-  visibility: hidden;
+  /* visibility: hidden; */
+  display: none;
 }
