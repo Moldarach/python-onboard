@@ -38,6 +38,10 @@ export default App
 */
 
 const NUM_DEFAULT_IMPORTS = 13;
+const SYNTAX_LESSONS = 4;
+const lessonCount = new Map();
+let globalTopic = 'syntax';
+let globalId;
 
 let pyop = document.querySelector("#python-out");
 let runBtn = document.querySelector("#run-btn");
@@ -72,7 +76,8 @@ testBtn.addEventListener("click", (e) => {
   console.log(pyodide.globals);
   const button = e.target;
   const parent = button.parentNode;
-  checkSubmission(parent.id, globalTopic);
+  //checkSubmission(parent.id, globalTopic);
+  checkSubmission(globalId, globalTopic);
 })
 
 /*
@@ -190,12 +195,8 @@ function evaluatePython(pycode) {
     .catch((err) => { makeop(err) });
 }
 
-  //export default App
-let globalTopic = 'syntax';
-let globalId;
-
   //for tabs
-function openTab(evt, cityName) {
+function openTab(evt, id) {
   
   // Declare all variables
   let i, tabcontent, tablinks;
@@ -214,10 +215,11 @@ function openTab(evt, cityName) {
 
   
   // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById('T1').style.display = "block";
+  document.getElementById('tabcontent').style.display = "block";
   evt.currentTarget.className += " active";
+  globalId = id;
   // @TODO fix this to not use globalTopic
-  updateLesson(cityName, globalTopic);
+  updateLesson(id, globalTopic);
 }
 
 /* set the lesson content body to the correct text file */
@@ -230,14 +232,15 @@ function updateLesson(id, topic) {
     // do something with "text"
     console.log(text);
     //const thing = document.getElementById(id).getElementsByClassName("tabbody");
-    const thing = document.getElementById('T1').getElementsByClassName("tabbody");
-    console.log(thing);
+    const thing = document.getElementById('tabcontent').getElementsByClassName("tabbody");
     console.log(thing[0]);
     //thing[0].outerText = text;
     thing[0].innerHTML = text;
-    //thing[0].setAttribute('class', 'tabbody');
+    
    })
   .catch((e) => console.error(e));
+  
+  hideResult();
 }
 
   //for sidebar
@@ -252,6 +255,7 @@ function closeNav() {
 }
 
 function updateTopic(evt, topic) {
+  /*
   if (topic === 'T1') {
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 1; i < tablinks.length; i++) {
@@ -262,8 +266,38 @@ function updateTopic(evt, topic) {
     for (i = 1; i < tablinks.length; i++) {
       tablinks[i].style.display = "block";
     }
-  }
-  
+  }*/
+ let size;
+ if (lessonCount.has(topic)) {
+  size = lessonCount.get(topic);
+ } else { //make backend call and populate map with result
+  let str = JSON.stringify({ topic: `${topic}`});
+  console.log(str);
+  const request = new Request('http://localhost:8000/filecount', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: str,
+  });
+  console.log(request);
+  fetch(request)
+    .then(response => {
+      if (!response.ok) {
+        // Handle HTTP errors
+        throw new Error('Network error ' + response.statusText);
+      }
+      return response.json(); // Parse the JSON from the response
+    })
+    .then(data => {
+        console.log(data); // Use the JSON data
+        // update the result
+    })
+  .catch(error => {
+      console.error('Fetch error ', error);
+  });
+ }
+  hideResult();
   globalTopic = topic;
   closeNav();
 }
@@ -323,22 +357,25 @@ async function checkSubmission(id, topic) {
 
   const str = JSON.stringify(short_map, replacer);
   const newValue = JSON.parse(str, reviver);
+  /*
   console.log("here");
   console.log(short_map);
   console.log('break1');
   console.log(str);
   console.log('break2');
   console.log(newValue);
-
+  */
+ console.log(str);
   const request = new Request('http://localhost:8000/', {
     method: "POST",
     //body: JSON.stringify({ username: "test"}),
     body: str,
   });
+  console.log(request);
   //first get access to elements
-  const container = document.getElementById(id).getElementsByClassName("result");
+  const container = document.getElementById("tabcontent").getElementsByClassName("result");
   const word = document.getElementById('help');
-  const icon = document.getElementById(id).getElementsByClassName("material-icons left");
+  const icon = document.getElementById("tabcontent").getElementsByClassName("material-icons left");
   //const icon = document.getElementById('result_status');
   console.log('container is ', container);
   console.log('word is ', word);
@@ -353,7 +390,7 @@ async function checkSubmission(id, topic) {
     })
     .then(data => {
         console.log(data); // Use the JSON data
-        //container[0].style.visibility='visible';
+        // update the result
         container[0].style.display='block';
         if (data['status'] === 'good') {
           icon[0].textContent = 'check';
@@ -369,12 +406,12 @@ async function checkSubmission(id, topic) {
   .catch(error => {
       console.error('Fetch error ', error);
   });
+}
 
-  // update the result
-  
-  
-  //console.log(thing[0].outerText);
-  
+function hideResult() {
+  // use of globalId here might cause issues
+  const container = document.getElementById("tabcontent").getElementsByClassName("result");
+  container[0].style.display='none';
 }
 
 window.addEventListener('load', () => {

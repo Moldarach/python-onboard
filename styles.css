@@ -126,19 +126,16 @@ body, html {
     }
     
     /* Style the tab content */
-    .tabcontent {
+    #tabcontent {
       display: none;
       padding: 6px 12px;
       border: 1px solid #ccc;
       border-top: none;
+      animation: fadeEffect 1s; /* Fading effect takes 1 second */
     }
 
     .tabbody {
       white-space: pre-line;
-    }
-
-    .tabcontent {
-      animation: fadeEffect 1s; /* Fading effect takes 1 second */
     }
     
     /* Go from zero to full opacity */
