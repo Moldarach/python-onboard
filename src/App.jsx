@@ -38,7 +38,6 @@ export default App
 */
 
 const NUM_DEFAULT_IMPORTS = 13;
-const SYNTAX_LESSONS = 4;
 const lessonCount = new Map();
 let globalTopic = 'syntax';
 let globalId;
@@ -46,6 +45,8 @@ let globalId;
 let pyop = document.querySelector("#python-out");
 let runBtn = document.querySelector("#run-btn");
 let testBtn = document.querySelector("#test-btn");
+
+getTabCount();
 
 const codemirrorEditor = CodeMirror.fromTextArea(
 	document.querySelector("#codearea"),
@@ -79,20 +80,6 @@ testBtn.addEventListener("click", (e) => {
   //checkSubmission(parent.id, globalTopic);
   checkSubmission(globalId, globalTopic);
 })
-
-/*
-var autorun =
-
-setInterval(function(){
-
-let pycode = codemirrorEditor.getValue();
-
-pyop.innerHTML = "";
-
-runPython(pycode);
-
-}, 2000);
-*/
 
 let startcode = `
 import sys, io, traceback
@@ -267,18 +254,72 @@ function updateTopic(evt, topic) {
       tablinks[i].style.display = "block";
     }
   }*/
- let size;
- if (lessonCount.has(topic)) {
-  size = lessonCount.get(topic);
- } else { //make backend call and populate map with result
-  let str = JSON.stringify({ topic: `${topic}`});
-  console.log(str);
+ /*
+  let size;
+  if (lessonCount.has(topic)) { // size has been stored so don't call backend
+    size = lessonCount.get(topic);
+  } else { //make backend call and populate map with result
+    let str = JSON.stringify({ topic: `${topic}`});
+    console.log(str);
+    const request = new Request('http://localhost:8000/filecount', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: str,
+    });
+    console.log(request);
+    fetch(request)
+      .then(response => {
+        if (!response.ok) {
+          // Handle HTTP errors
+          throw new Error('Network error ' + response.statusText);
+        }
+        return response.json(); // Parse the JSON from the response
+      })
+      .then(data => { // process the response
+        size = data['file_count'];
+        console.log(data)
+        console.log('update here');
+        // update the map
+        lessonCount.set(topic, size);
+      })
+    .catch(error => {
+        console.error('Fetch error ', error);
+  });
+  } */
+  const size = lessonCount.get(topic);
+  // display correct number of tabs
+  tablinks = document.getElementsByClassName("tablinks");
+  console.log(size);
+  console.log(tablinks.length);
+  /*
+  if (tablinks.length > size) { // need to hide some tabs
+    for (i = size; i < tablinks.length; i++) {
+      tablinks[i].style.display = "none";
+    }
+  } else if (tablinks.length < size) {  // need to show some tabs
+    for (i = tablinks.length; i < size; i++) {
+      tablinks[i].style.display = "block";
+    }
+  } */
+  for (i = 1; i < tablinks.length; i++) {
+    tablinks[i].style.display = "none";
+  }
+  for (i = 1; i <= size; i++) {
+    tablinks[i].style.display = "block";
+  }
+  hideResult();
+  globalTopic = topic;
+  closeNav();
+}
+
+function getTabCount() {
   const request = new Request('http://localhost:8000/filecount', {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: str,
   });
   console.log(request);
   fetch(request)
@@ -289,17 +330,16 @@ function updateTopic(evt, topic) {
       }
       return response.json(); // Parse the JSON from the response
     })
-    .then(data => {
-        console.log(data); // Use the JSON data
-        // update the result
+    .then(data => { // process the response
+      let temp = new Map(Object.entries(JSON.parse(data)));
+      // update the map
+      temp.forEach((value, key) => {
+        lessonCount.set(key, value);
+      });
     })
   .catch(error => {
       console.error('Fetch error ', error);
   });
- }
-  hideResult();
-  globalTopic = topic;
-  closeNav();
 }
 
 function replacer(key, value) {

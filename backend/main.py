@@ -54,18 +54,23 @@ async def root(request: Request):
   #return js
   return {"status": "bad"}
 
-@app.post("/filecount")
-async def file_count(request: Request):
-  js = await request.json()
-  str = js["topic"]
+@app.get("/filecount")
+async def file_count():
+  #js = await request.json()
+  #str = js["topic"]
   #return {"message": "Hello World"}
   logger.debug("counting here")
-  logger.debug(request)
-  directory_path = os.path.join(os.path.dirname(__file__), '../content/' + str)
-  try:
-    # List all files in the directory
-    files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
-    file_count = len(files)
-    return {"file_count": file_count}
-  except Exception as e:
-    return {"error": str(e)}
+  #logger.debug(request)
+  topics = ["syntax", "arrays", "matrices", "complex", "pfd"]
+  data = {}
+  for str in topics:
+    directory_path = os.path.join(os.path.dirname(__file__), "../content/" + str)
+    try:
+      # List all files in the directory
+      files = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
+      file_count = len(files)
+      #return {"file_count": file_count}
+      data[str] = file_count
+    except Exception as e:
+      return {"error": str(e)}
+  return json.dumps(data)
