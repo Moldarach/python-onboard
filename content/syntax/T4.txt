@@ -1,0 +1,5 @@
+And for my last trick...
+Let's try out exponents!
+Create a new variable <b>z</b> and set it equal to <b>x</b> raised to the power of <b>y</b>.
+
+Python has an operator for power. It is denoted by **, and so to accomplish this task, we may do this: <blockquote>z=x**y</blockquote>

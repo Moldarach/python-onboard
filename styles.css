@@ -1,36 +1,38 @@
+body,
+html {
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: white;
+  overflow-y: hidden;
+}
 
-body, html {
-        height: 100vh;
-        box-sizing: border-box;
-        background-color: white;
-        overflow-y: hidden;
-    } 
-    .CodeMirror {
-      border-bottom: 2px solid gray;
-      height: 100% !important; 
-      font-size: 16px;
-  } 
-  #python-out {
-      border-top: 2px solid gray;
+.CodeMirror {
+  border-bottom: 2px solid gray;
+  height: 100% !important;
+  font-size: 16px;
+}
 
-      height: 45vh;
+#python-out {
+  border-top: 2px solid gray;
 
-      overflow-y: auto;
+  height: 45vh;
 
-      font-size: 16px;
+  overflow-y: auto;
 
-      background-color: black;
+  font-size: 16px;
 
-      padding-left: 30px;
+  background-color: black;
 
-      padding-top: 30px;
+  padding-left: 30px;
 
-      box-sizing: border-box;
+  padding-top: 30px;
 
-      color: white;
+  box-sizing: border-box;
 
-      font-family: 'Source Code Pro', monospace;
-/*
+  color: white;
+
+  font-family: 'Source Code Pro', monospace;
+  /*
       animation-duration: 1.0s;
 
       animation-name: colorthing;
@@ -39,170 +41,226 @@ body, html {
 
       animation-direction: alternate;
       */
-  }
-  @keyframes colorthing {
+}
 
-      from {
+@keyframes colorthing {
 
-      color: rgb(0, 255, 0);               		
-      }
+  from {
 
-      to {
-
-      color: rgb(14, 161, 14);
-
-      }
-
-      }
-  .btn {
-      margin-top: 12px;
-      margin-left: 0px;
+    color: rgb(0, 255, 0);
   }
 
-  .btn:hover {
-      color: #04AA6D;
-      background-color: white;
-    }
+  to {
 
+    color: rgb(14, 161, 14);
 
-  .navbar {
-      display: flex;
-      color: #F9FAF8;
-      background-color: #1F2937;
-      padding: 20px 0px 20px 100px;
-      align-items: center;
-      height: 5vh;
   }
-  
-  .header-logo {
-      /*width: 84px;
+
+}
+
+.btn {
+  margin-top: 12px;
+  margin-left: 0px;
+}
+
+.btn:hover {
+  color: #04AA6D;
+  background-color: white;
+}
+
+
+.navbar {
+  display: flex;
+  color: #F9FAF8;
+  background-color: #1F2937;
+  padding: 20px 0px 20px 100px;
+  align-items: center;
+  height: 5vh;
+}
+
+.header-logo {
+  /*width: 84px;
       height: 84px;
       margin-right: auto;*/
-      margin-bottom: 2vh;
+  margin-bottom: 2vh;
+}
+
+.header-link {
+  display: flex;
+  margin-left: auto;
+  padding: 0px 100px 0px 0px;
+}
+
+.header-link a {
+  text-decoration: none;
+  color: #E5E7EB;
+  font-size: 18px;
+  /* padding: 10px; */
+  font-family: 'Roboto', arial;
+}
+
+
+/* For the tabs */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  /*border-right: 1px solid black;*/
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+#tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  animation: fadeEffect 1s;
+  /* Fading effect takes 1 second */
+}
+
+.tabbody {
+  white-space: pre-line;
+}
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+  from {
+    opacity: 0;
   }
-  
-  .header-link {
-      display: flex;
-      margin-left: auto;
-      padding: 0px 100px 0px 0px;  
+
+  to {
+    opacity: 1;
   }
-  
-  .header-link a {
-      text-decoration: none;
-      color: #E5E7EB;
-      font-size: 18px;
-      /* padding: 10px; */
-      font-family: 'Roboto', arial;
-  }
-
-    
-  /* For the tabs */
-  .tab {
-      overflow: hidden;
-      border: 1px solid #ccc;
-      background-color: #f1f1f1;
-    }
-    
-    /* Style the buttons that are used to open the tab content */
-    .tab button {
-      background-color: inherit;
-      float: left;
-      border: none;
-      /*border-right: 1px solid black;*/
-      outline: none;
-      cursor: pointer;
-      padding: 14px 16px;
-      transition: 0.3s;
-    }
-    
-    /* Change background color of buttons on hover */
-    .tab button:hover {
-      background-color: #ddd;
-    }
-    
-    /* Create an active/current tablink class */
-    .tab button.active {
-      background-color: #ccc;
-    }
-    
-    /* Style the tab content */
-    #tabcontent {
-      display: none;
-      padding: 6px 12px;
-      border: 1px solid #ccc;
-      border-top: none;
-      animation: fadeEffect 1s; /* Fading effect takes 1 second */
-    }
-
-    .tabbody {
-      white-space: pre-line;
-    }
-    
-    /* Go from zero to full opacity */
-    @keyframes fadeEffect {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
+}
 
 
+/* for loading screen */
+#loadingScreen {
+	height: 100%;
+  /* 100% Full-height */
+  width: 100%;
+  /* 0px width - make 100% to start with it open */
+  position: fixed;
+  /* Stay in place */
+  z-index: 6;
+  /* Stay on top */
+  top: 0;
+  /* Stay at the top */
+  left: 0;
+  background-color: #ffffff;
+  /* Black*/
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  /*padding-top: 60px;*/
+  /* Place content 60px from the top */
+  transition: 0.5s;
+  /* 0.5 second transition effect to slide in the sidenavbar */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
+#loadingScreen p {
+	padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 50px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  text-align: center;
+}
 
 /* The side navigation menu */
 .sidenavbar {
-  height: 100%; /* 100% Full-height */
-  width: 0px; /* 0px width - make 100% to start with it open */
-  position: fixed; /* Stay in place */
-  z-index: 5; /* Stay on top */
-  top: 0; /* Stay at the top */
+  height: 100%;
+  /* 100% Full-height */
+  width: 0px;
+  /* 0px width - make 100% to start with it open */
+  position: fixed;
+  /* Stay in place */
+  z-index: 5;
+  /* Stay on top */
+  top: 0;
+  /* Stay at the top */
   left: 0;
-  background-color: #111; /* Black*/
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenavbar */
+  background-color: #111;
+  /* Black*/
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  padding-top: 60px;
+  /* Place content 60px from the top */
+  transition: 0.5s;
+  /* 0.5 second transition effect to slide in the sidenavbar */
 }
 
 /* The navigation menu links */
+.sidenavbar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  text-align: center;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenavbar a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenavbar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenavbar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenavbar {
+    padding-top: 15px;
+  }
+
   .sidenavbar a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-    text-align: center;
+    font-size: 18px;
   }
+}
 
-  /* When you mouse over the navigation links, change their color */
-  .sidenavbar a:hover {
-    color: #f1f1f1;
-  }
-
-  /* Position and style the close button (top right corner) */
-  .sidenavbar .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
-
-  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-  #main {
-    transition: margin-left .5s;
-    padding: 20px;
-  }
-
-  /* On smaller screens, where height is less than 450px, change the style of the sidenavbar (less padding and a smaller font size) */
-  @media screen and (max-height: 450px) {
-    .sidenavbar {padding-top: 15px;}
-    .sidenavbar a {font-size: 18px;}
-  }
-
-  /* Dark mode */
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   body {
-      background-color: white;
-      color: black;
+    background-color: white;
+    color: black;
   }
 }
 

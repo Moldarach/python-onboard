@@ -43,15 +43,24 @@ async def root(request: Request):
   #logger.debug(json.dumps(js, indent=1))
   logger.debug(type(js))
   if (isinstance(js, dict)):
+    topic = js["GLOBAL_TOPIC"]
+    id = js["GLOBAL_ID"]
+    file_path = "../sols/" + topic + "/sol" + id + ".txt"
     for key, value in js.items():
-      print(key + " " + str(value))
-      #REMOVE THIS LATER
-      if (key == 'x' and value == 5):
-        return {"status": "good"}
+      print(key + " " + str(value) + " " + str(type(value)))
 
-  logger.debug("help me")
-
-  #return js
+    with open(file_path) as fp:
+      for line in fp:
+        # might need type-checking if just checking value causes issues
+        logger.debug(line)
+        parts = line.split(";") # name;value
+        res = js.get(parts[0])
+        if (res == None):
+          return {"status": "var_does_not_exist"}
+        val = eval(str(parts[1]))
+        if (res != val):
+          return {"status": "bad_value"}
+    return {"status": "good"}      
   return {"status": "bad"}
 
 @app.get("/filecount")

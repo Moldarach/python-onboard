@@ -1,0 +1,1 @@
+Create an array named <b>a1</b> equal to [1, 2, 3]

@@ -1,0 +1,4 @@
+Now, change <b>x</b> to equal -2, and let's print out what <b>x</b> is!
+First, you'll want to modify your original line to set <b>x</b> equal to -2.
+Next, we can use the print statement.
+Try the following:<blockquote> print(x) </blockquote>

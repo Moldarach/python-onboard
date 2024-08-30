@@ -1,0 +1,11 @@
+issues:
+
+(8/30/24)
+-each time Pyodide is ran, it does not clear memory, so any
+  variable you previously had created will have it's old value
+  even if it isn't explicitly declared in the current script
+  anymore. This will likely cause confusion, and the only 
+  ways I can think to fix this are by deleting all the variables
+  in globals, or restart the interpreter on each execution.
+  Deleting globals seems jank, but restarting the interpreter
+  will not work because it takes too long to load.

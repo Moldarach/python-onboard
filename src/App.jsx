@@ -57,7 +57,17 @@ const codemirrorEditor = CodeMirror.fromTextArea(
 	}
 );
 
-codemirrorEditor.setValue(`print("Hello World")\nimport math\nexec("print(\\\"help\\\")")\nx=10\ny=True`)
+codemirrorEditor.setValue(`import numpy as np
+import math
+import cmath
+x=4
+y=2j
+z=complex(1, 3)
+a1 = np.array([1, 9-7, 3])
+a2 = np.array([[4, 5], [6, 7]])
+print(a1)
+print(a2)
+print(x, y, z)`);
 
 function makeop(s){
 	console.log(s);
@@ -66,18 +76,14 @@ function makeop(s){
 
 runBtn.addEventListener("click", (e) => {
 	let pycode = codemirrorEditor.getValue();
-	//pyop.innerHTML = "";
 	runPython(pycode);
 })
 
 testBtn.addEventListener("click", (e) => {
 	let pycode = codemirrorEditor.getValue();
-	//pyop.innerHTML = "";
 	runPython(pycode);
   console.log(pyodide.globals);
   const button = e.target;
-  const parent = button.parentNode;
-  //checkSubmission(parent.id, globalTopic);
   checkSubmission(globalId, globalTopic);
 })
 
@@ -87,7 +93,7 @@ import sys, io, traceback
 
 def run_code(code):
     """run specified code and return stdout and stderr"""
-    allowed_imports = {"math": True, "cmath": True, "numpy": True}
+    allowed_imports = {"math": True, "cmath": True, "numpy": True, "numpy as np": True}
 
     out = io.StringIO()
     oldout = sys.stdout
@@ -96,30 +102,33 @@ def run_code(code):
     # do not allow multi-statement lines
     # for security purposes
     if (";" not in code):
-      #raw = repr(code)[1:-1]
-      #src = code
-      #print("raw: ", src)
-      lines = code.splitlines()
-      #print("list: ", lines)
+      if ("exec" not in code and "eval" not in code):
+        #raw = repr(code)[1:-1]
+        #src = code
+        #print("raw: ", src)
+        lines = code.splitlines()
+        #print("list: ", lines)
 
-      line_number = 1
-      # parse input and check for illegal imports
-      for word in lines:
-        if (word.find("import") == 0):
-          imports = word[len("import"):].split(",")
-          #print("imports: ", imports)
-          for i in imports:
-            if i.strip() not in allowed_imports:
-              out.write("Illegal import " + i + " on line " + str(line_number) + ".\\n")
-              return out.getvalue()
-        line_number += 1
+        line_number = 1
+        # parse input and check for illegal imports
+        for word in lines:
+          if (word.find("import") == 0):
+            imports = word[len("import"):].split(",")
+            #print("imports: ", imports)
+            for i in imports:
+              if i.strip() not in allowed_imports:
+                out.write("Illegal import " + i + " on line " + str(line_number) + ".\\n")
+                return out.getvalue()
+          line_number += 1
 
-      try:
-          # change next line to exec(code, {}) if you want to clear vars each time
-          #print("code: ", repr(code))
-          exec(code, globals() )
-      except:
-          traceback.print_exc()
+        try:
+            # change next line to exec(code, {}) if you want to clear vars each time
+            #print("code: ", repr(code))
+            exec(code, globals() )
+        except:
+            traceback.print_exc()
+      else:
+        out.write("Please do not use 'exec' or 'eval' statements, even in comments")
     else:
       out.write("Please do not use semicolons")
     sys.stdout = oldout
@@ -131,35 +140,15 @@ def run_code(code):
 	pyodide.runPython(startcode)
   }
 
-  /*
-languagePluginLoader.then(() => {
-	// Pyodide is now ready to use...
-	setup_pyodide(startcode)
-	pyodide.globals.code_to_run = `print("Hello World")`;
-	makeop(pyodide.runPythonAsync(`run_code(code_to_run)`));
-  });
-*/
  loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
   globalThis.pyodide = pyodide
-
-  //setup_pyodide(startcode)
-	//let code_to_run = `print("Hello World")`;
-	//makeop(pyodide.runPython(`run_code(code_to_run)`));
-  
+ 
   // edit this for available python package imports
   pyodide.loadPackage(['numpy']).then(() => {
   //pyodide.loadPackage([]).then(() => {
-  //pyodide.runPython(`   
-  //My python code here
   console.log("finished loading packages");
+  closeLoading();
   setup_pyodide(startcode)
-  /*
-	const code = startcode;
-  const str1 = '';
-  const str2 = str1.concat('run_code(', code, ')');
-  console.log(str2);
-	makeop(pyodide.runPython(str2)); */
-//`);
 }); });
 
 
@@ -171,7 +160,6 @@ function runPython(pycode) {
   const str1 = 'run_code(';
   const str2 = str1.concat(code, ')');
   console.log(str2);
-	//makeop(pyodide.runPython(str2));
   pyodide.globals.set("code_to_run", pycode);
   makeop(pyodide.runPython('run_code(code_to_run)'));
 }
@@ -182,7 +170,7 @@ function evaluatePython(pycode) {
     .catch((err) => { makeop(err) });
 }
 
-  //for tabs
+//for tabs
 function openTab(evt, id) {
   
   // Declare all variables
@@ -199,7 +187,6 @@ function openTab(evt, id) {
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-
   
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById('tabcontent').style.display = "block";
@@ -218,11 +205,9 @@ function updateLesson(id, topic) {
   .then((text) => {
     // do something with "text"
     console.log(text);
-    //const thing = document.getElementById(id).getElementsByClassName("tabbody");
-    const thing = document.getElementById('tabcontent').getElementsByClassName("tabbody");
-    console.log(thing[0]);
-    //thing[0].outerText = text;
-    thing[0].innerHTML = text;
+    const body = document.getElementById('tabcontent').getElementsByClassName("tabbody");
+    console.log(body[0]);
+    body[0].innerHTML = text;
     
    })
   .catch((e) => console.error(e));
@@ -233,82 +218,32 @@ function updateLesson(id, topic) {
   //for sidebar
   /* Set the width of the side navigation to 250px */
 function openNav() {
-  document.getElementById("mySidenav").style.width = "100%";
+  document.getElementById("sidenav").style.width = "100%";
 }
 
 /* Set the width of the side navigation to 0 */
 function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("sidenav").style.width = "0";
+}
+
+function closeLoading() {
+  document.getElementById("loadingScreen").style.height = "0";
 }
 
 function updateTopic(evt, topic) {
-  /*
-  if (topic === 'T1') {
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 1; i < tablinks.length; i++) {
-      tablinks[i].style.display = "none";
-    }
-  } else if (topic === 'T2') {
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 1; i < tablinks.length; i++) {
-      tablinks[i].style.display = "block";
-    }
-  }*/
- /*
-  let size;
-  if (lessonCount.has(topic)) { // size has been stored so don't call backend
-    size = lessonCount.get(topic);
-  } else { //make backend call and populate map with result
-    let str = JSON.stringify({ topic: `${topic}`});
-    console.log(str);
-    const request = new Request('http://localhost:8000/filecount', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: str,
-    });
-    console.log(request);
-    fetch(request)
-      .then(response => {
-        if (!response.ok) {
-          // Handle HTTP errors
-          throw new Error('Network error ' + response.statusText);
-        }
-        return response.json(); // Parse the JSON from the response
-      })
-      .then(data => { // process the response
-        size = data['file_count'];
-        console.log(data)
-        console.log('update here');
-        // update the map
-        lessonCount.set(topic, size);
-      })
-    .catch(error => {
-        console.error('Fetch error ', error);
-  });
-  } */
   const size = lessonCount.get(topic);
   // display correct number of tabs
   tablinks = document.getElementsByClassName("tablinks");
   console.log(size);
   console.log(tablinks.length);
-  /*
-  if (tablinks.length > size) { // need to hide some tabs
-    for (i = size; i < tablinks.length; i++) {
-      tablinks[i].style.display = "none";
-    }
-  } else if (tablinks.length < size) {  // need to show some tabs
-    for (i = tablinks.length; i < size; i++) {
-      tablinks[i].style.display = "block";
-    }
-  } */
+
   for (i = 1; i < tablinks.length; i++) {
     tablinks[i].style.display = "none";
   }
   for (i = 1; i <= size; i++) {
     tablinks[i].style.display = "block";
   }
+  clearTabContent();
   hideResult();
   globalTopic = topic;
   closeNav();
@@ -354,11 +289,6 @@ function replacer(key, value) {
       json_obj[curr[0]] = curr[1];
     }
     return json_obj;
-/*
-    return {
-      dataType: 'Map',
-      value: Array.from(value.entries()), // or with spread: value: [...value]
-    }; */
   } else {
     return value;
   }
@@ -397,18 +327,9 @@ async function checkSubmission(id, topic) {
 
   const str = JSON.stringify(short_map, replacer);
   const newValue = JSON.parse(str, reviver);
-  /*
-  console.log("here");
-  console.log(short_map);
-  console.log('break1');
-  console.log(str);
-  console.log('break2');
-  console.log(newValue);
-  */
  console.log(str);
   const request = new Request('http://localhost:8000/', {
     method: "POST",
-    //body: JSON.stringify({ username: "test"}),
     body: str,
   });
   console.log(request);
@@ -416,7 +337,6 @@ async function checkSubmission(id, topic) {
   const container = document.getElementById("tabcontent").getElementsByClassName("result");
   const word = document.getElementById('help');
   const icon = document.getElementById("tabcontent").getElementsByClassName("material-icons left");
-  //const icon = document.getElementById('result_status');
   console.log('container is ', container);
   console.log('word is ', word);
   console.log('icon is ', icon);
@@ -452,6 +372,20 @@ function hideResult() {
   // use of globalId here might cause issues
   const container = document.getElementById("tabcontent").getElementsByClassName("result");
   container[0].style.display='none';
+}
+
+function clearTabContent() {
+  // hide the tab itself
+  const tab = document.getElementById('tabcontent');
+  tab.style.display = "none"
+  // clear the inner text
+  const body = tab.getElementsByClassName("tabbody");
+  body[0].innerHTML = "";
+  // clear 'active' status
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
 }
 
 window.addEventListener('load', () => {

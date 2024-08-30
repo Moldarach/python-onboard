@@ -41,7 +41,11 @@
 		/>
 	</head>
 	<body>
-		<div id="mySidenav" class="sidenavbar">
+		<div id="loadingScreen">
+			<p>loading...</p>
+		</div>
+		
+		<div id="sidenav" class="sidenavbar">
 			<a href="#" class="closebtn" onclick="closeNav()">&times;</a>
 			<a href="#">Intro to Python</a>
 			<a href="javascript:void(0);" onclick="updateTopic(event, 'syntax')" >Basic Syntax</a>
@@ -54,49 +58,17 @@
 		<nav class="navbar">
 			<div class="header-logo">
 				<h3>sample</h3>
-			</div>
-			
+			</div>			
 			<div class="header-link">
-				<!--
-				<a href="#">About</a>
-				<a href="#">Shop</a>
-				<a href="#">Contact</a> 
-			-->
-				<!--
-				<a class="waves-effect waves-light btn" id="run-btn">
-					<i class="material-icons right">code</i>Run</a>
-				<a class="waves-effect waves-light btn" href="https://google.com" target="_blank">
-					<i class="material-icons right">cloud</i>Test Code</a> 
-				-->
 				<button class="btn" id="run-btn">Run</button>
 			</div>
 		</nav>
-<!--
-		<center class="row">
-			 	
-		</center>
-		<br />
-	-->	
-		
 		
 		<div class="row">
-			
-			  
-			  
-
-
 			<div class="content" style="float: left; width: 50%">
-				<!--
-				<object data="./cmd_instr.txt" width="100%" height="100%">
-					Not supported
-				</object>
-			-->
 				<div class="tab">
 					
 				<button class="tablinks" onclick="openNav()">===</button>
-				<!--
-				<button class="tablinks" onclick="openTab(event, 'T1')">London</button>
-				-->
 				<button class="tablinks" onclick="openTab(event, 'T1')">T1</button>
 				<button class="tablinks" onclick="openTab(event, 'T2')">T2</button>
 				<button class="tablinks" onclick="openTab(event, 'T3')">T3</button>
