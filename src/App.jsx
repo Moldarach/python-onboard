@@ -1,42 +1,3 @@
-/*
-
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
-*/
-
 const NUM_DEFAULT_IMPORTS = 13;
 const lessonCount = new Map();
 let globalTopic = 'syntax';
@@ -47,6 +8,7 @@ let runBtn = document.querySelector("#run-btn");
 let testBtn = document.querySelector("#test-btn");
 
 getTabCount();
+//downloadContent();
 
 const codemirrorEditor = CodeMirror.fromTextArea(
 	document.querySelector("#codearea"),
@@ -87,19 +49,8 @@ testBtn.addEventListener("click", (e) => {
   checkSubmission(globalId, globalTopic);
 })
 
-let startcode = `
-import sys, io, traceback
-#namespace = {}  # use separate namespace to hide run_code, modules, etc.
-
-def run_code(code):
-    """run specified code and return stdout and stderr"""
-    allowed_imports = {"math": True, "cmath": True, "numpy": True, "numpy as np": True}
-
-    out = io.StringIO()
-    oldout = sys.stdout
-    olderr = sys.stderr
-    sys.stdout = sys.stderr = out
-    # do not allow multi-statement lines
+/*
+# do not allow multi-statement lines
     # for security purposes
     if (";" not in code):
       if ("exec" not in code and "eval" not in code):
@@ -131,6 +82,33 @@ def run_code(code):
         out.write("Please do not use 'exec' or 'eval' statements, even in comments")
     else:
       out.write("Please do not use semicolons")
+*/
+async function downloadContent() {
+  let zipResponse = await fetch("https://students.washington.edu/myu97/sols.zip");
+  let zipBinary = await zipResponse.arrayBuffer();
+  pyodide.unpackArchive(zipBinary, "zip");
+}
+
+let startcode = `
+import sys, io, traceback
+#namespace = {}  # use separate namespace to hide run_code, modules, etc.
+
+def run_code(code):
+    """run specified code and return stdout and stderr"""
+    allowed_imports = {"math": True, "cmath": True, "numpy": True, "numpy as np": True, "scipy": True, "scipy as sp": True}
+
+    out = io.StringIO()
+    oldout = sys.stdout
+    olderr = sys.stderr
+    sys.stdout = sys.stderr = out
+    
+    try:
+      # change next line to exec(code, {}) if you want to clear vars each time
+      #print("code: ", repr(code))
+      exec(code, globals() )
+    except:
+      traceback.print_exc()
+
     sys.stdout = oldout
     sys.stderr = olderr
     return out.getvalue()
@@ -144,12 +122,14 @@ def run_code(code):
   globalThis.pyodide = pyodide
  
   // edit this for available python package imports
-  pyodide.loadPackage(['numpy']).then(() => {
+  pyodide.loadPackage(['numpy', 'scipy']).then(() => {
   //pyodide.loadPackage([]).then(() => {
   console.log("finished loading packages");
   closeLoading();
   setup_pyodide(startcode)
-}); });
+  }); 
+  downloadContent();
+});
 
 
 
@@ -250,7 +230,7 @@ function updateTopic(evt, topic) {
 }
 
 function getTabCount() {
-  const request = new Request('http://localhost:8000/filecount', {
+  const request = new Request('http://localhost:8001/filecount', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -328,7 +308,7 @@ async function checkSubmission(id, topic) {
   const str = JSON.stringify(short_map, replacer);
   const newValue = JSON.parse(str, reviver);
  console.log(str);
-  const request = new Request('http://localhost:8000/', {
+  const request = new Request('http://localhost:8001/', {
     method: "POST",
     body: str,
   });
