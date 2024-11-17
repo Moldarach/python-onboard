@@ -1,0 +1,6 @@
+Create a matrix <b>A</b> equal to [[1, 2], [3, -5]], and another <b>b</b> matrix equal to [5, -7]
+Here it doesn't really matter what you name these matrices, but the point is to solve the equation Ax=b.
+We will do this using numpy and its built-in linalg.solve function.
+We can solve for x by setting it assigning it like so:<blockquote>x = numpy.linalg.solve(A,b)</blockquote>
+
+If you want a visual, this is solving the equation:<img src="./content/matrices/p2.png"/>

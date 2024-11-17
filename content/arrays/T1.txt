@@ -1,1 +1,2 @@
 Create an array named <b>a1</b> equal to [1, 2, 3]
+You can do this with: <blockquote>a1 = np.array([1, 2, 3])</blockquote>

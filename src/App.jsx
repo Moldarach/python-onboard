@@ -1,5 +1,14 @@
 const NUM_DEFAULT_IMPORTS = 13;
 const lessonCount = new Map();
+// hard coding lesson counts
+lessonCount.set("syntax", 4);
+lessonCount.set("arrays", 1);
+lessonCount.set("complex", 1);
+lessonCount.set("matrices", 2);
+lessonCount.set("pfd", 1);
+
+//incrementCounter();
+
 let globalTopic = 'syntax';
 let globalId;
 
@@ -7,8 +16,8 @@ let pyop = document.querySelector("#python-out");
 let runBtn = document.querySelector("#run-btn");
 let testBtn = document.querySelector("#test-btn");
 
-getTabCount();
-//downloadContent();
+let loaded = false;
+
 
 const codemirrorEditor = CodeMirror.fromTextArea(
 	document.querySelector("#codearea"),
@@ -53,33 +62,27 @@ testBtn.addEventListener("click", (e) => {
 # do not allow multi-statement lines
     # for security purposes
     if (";" not in code):
-      if ("exec" not in code and "eval" not in code):
-        #raw = repr(code)[1:-1]
-        #src = code
-        #print("raw: ", src)
-        lines = code.splitlines()
-        #print("list: ", lines)
+      #raw = repr(code)[1:-1]
+      #src = code
+      #print("raw: ", src)
+      lines = code.splitlines()
+      #print("list: ", lines)
 
-        line_number = 1
-        # parse input and check for illegal imports
-        for word in lines:
-          if (word.find("import") == 0):
-            imports = word[len("import"):].split(",")
-            #print("imports: ", imports)
-            for i in imports:
-              if i.strip() not in allowed_imports:
-                out.write("Illegal import " + i + " on line " + str(line_number) + ".\\n")
-                return out.getvalue()
-          line_number += 1
+      add_lines = []
+      pattern =  r'\d+j'
+      # parse input and check for complex numbers
+      for word in lines:
+        if re.search(pattern, word):
+          res = eval(word)
+          if (isinstance(res, complex)):
+            real_part = f"
 
-        try:
-            # change next line to exec(code, {}) if you want to clear vars each time
-            #print("code: ", repr(code))
-            exec(code, globals() )
-        except:
-            traceback.print_exc()
-      else:
-        out.write("Please do not use 'exec' or 'eval' statements, even in comments")
+      try:
+          # change next line to exec(code, {}) if you want to clear vars each time
+          #print("code: ", repr(code))
+          exec(code, globals() )
+      except:
+          traceback.print_exc()
     else:
       out.write("Please do not use semicolons")
 */
@@ -91,7 +94,7 @@ async function downloadContent() {
 
 let startcode = `
 import sys, io, traceback
-#namespace = {}  # use separate namespace to hide run_code, modules, etc.
+namespace = {}  # use separate namespace to hide run_code, modules, etc.
 
 def run_code(code):
     """run specified code and return stdout and stderr"""
@@ -108,7 +111,31 @@ def run_code(code):
       exec(code, globals() )
     except:
       traceback.print_exc()
+    """
+    vars = globals()
+    #vars = namespace
+    helpme = 20
 
+    for key, val in vars.items():
+      if (key != 'code_to_run' and not key.startswith("__")):
+        if isinstance(val, complex):
+          try:
+            # for handling complex numbers because it's messed up
+            #print(key + ":" + str(val))
+            real_name = key + "_real"
+            imag_name = key + "_imag"
+            #exec(f"{real_name} = {val.real}", globals())
+            two = val.imag
+            exec(f"imag_name = {two}", {})
+            #globals()[real_name] = val.real
+            exec("print('help')", globals())
+
+          except:
+            traceback.print_exc()
+             
+            """
+    #print(globals())
+    
     sys.stdout = oldout
     sys.stderr = olderr
     return out.getvalue()
@@ -118,18 +145,136 @@ def run_code(code):
 	pyodide.runPython(startcode)
   }
 
- loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
-  globalThis.pyodide = pyodide
- 
-  // edit this for available python package imports
-  pyodide.loadPackage(['numpy', 'scipy']).then(() => {
-  //pyodide.loadPackage([]).then(() => {
-  console.log("finished loading packages");
-  closeLoading();
-  setup_pyodide(startcode)
-  }); 
-  downloadContent();
-});
+  /*
+  function loadPyodide_func() {
+    loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"}).then((pyodide) => {
+      console.log("enter load");
+      globalThis.pyodide = pyodide
+  
+      // edit this for available python package imports
+      pyodide.loadPackage(['numpy', 'scipy', 'sympy']).then(() => {
+      //pyodide.loadPackage([]).then(() => {
+      console.log("finished loading packages");
+      closeLoading();
+      setup_pyodide(startcode)
+      }); 
+      //downloadContent();
+    });
+  }
+  */
+
+  async function loadPyodide_async() {
+    try {
+      console.log("help")
+      const pyodide = await loadPyodide ({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full"});
+      console.log("enter load");
+      globalThis.pyodide = pyodide
+      await pyodide.loadPackage(['numpy', 'scipy', 'sympy']);
+      console.log("finished loading packages");
+      closeLoading();
+      setup_pyodide(startcode);
+    } catch (error) {
+      console.log("error loading pyodide", error);
+    }
+  }
+
+  //getTabCount();
+//downloadContent();
+async function animateLoad() {
+  let counter = 1;
+  const screen = document.getElementById('loadingScreen');
+  const count = screen.getElementsByClassName("loadingText");
+  while (!loaded) {
+    setTimeout(() => {
+      count[0].innerHTML = counter;
+      counter++;
+    }, 1000)
+  }
+}
+
+async function incrementCounter() {
+  return new Promise((resolve, reject) => {
+    let counter = 1;
+    const screen = document.getElementById('loadingScreen');
+    const count = screen.getElementsByClassName("loadingText");
+    
+    const intervalId = setInterval(() => {
+      count[0].innerHTML = counter;
+      counter++; // Increment the counter
+      //console.log(counter); // Log the current value of the counter
+
+      // You can stop the interval after a certain time (e.g., after 10 increments)
+      if (loaded) {
+        clearInterval(intervalId); // Clear the interval when the counter reaches 10
+        resolve("Done incrementing!");
+      }
+    }, 1000); // Every 1000 ms (1 second)
+  });
+}
+
+async function updateCounter2() {
+  console.log("enter update");
+  let counter = 1;
+  const screen = document.getElementById('loadingScreen');
+  const count = screen.getElementsByClassName("loadingText");
+  while (!loaded) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log(counter);
+    count[0].innerHTML = counter;
+    counter++;
+  }
+}
+
+async function loadPyodideWithPolling() {
+  let counter = 1;
+  const screen = document.getElementById('loadingScreen');
+  const count = screen.getElementsByClassName("loadingText");
+  // Create the Pyodide loading promise
+  console.log('help');
+  const pyodidePromise = loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full" });
+  console.log('help again');
+  // Polling flag and counter
+  let timeoutReached = false;
+
+  // Set a timeout for 1 second to stop waiting
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      timeoutReached = true;
+      count[0].innerHTML = counter;
+      counter++;
+      resolve("Timeout reached after 1 second.");
+    }, 20000); // Timeout after 1 second
+  });
+
+  // The polling loop to check if Pyodide has loaded or timeout has occurred
+  async function pollingLoop() {
+    while (!timeoutReached) {
+      console.log(
+        promiseState(pyodidePromise));
+      console.log("poll loop");
+      count[0].innerHTML = counter;
+      counter++;
+      // Sleep for a small amount before checking again (non-blocking)
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Check every 100ms
+    }
+  }
+
+  // Run polling loop and wait for either timeout or Pyodide loading
+  await Promise.race([pollingLoop(), timeoutPromise]);
+
+  // After the race completes, log the result
+  if (timeoutReached) {
+    console.log("Timeout reached before Pyodide finished loading.");
+  } else {
+    console.log("Pyodide loaded successfully!");
+  }
+}
+
+function promiseState(p) {
+  const t = {};
+  return Promise.race([p, t])
+    .then(v => (v === t)? "pending" : "fulfilled", () => "rejected");
+}
 
 
 
@@ -139,7 +284,7 @@ function runPython(pycode) {
   const code = pycode;
   const str1 = 'run_code(';
   const str2 = str1.concat(code, ')');
-  console.log(str2);
+  //console.log(str2);
   pyodide.globals.set("code_to_run", pycode);
   makeop(pyodide.runPython('run_code(code_to_run)'));
 }
@@ -179,15 +324,16 @@ function openTab(evt, id) {
 /* set the lesson content body to the correct text file */
 function updateLesson(id, topic) {
   
-  path = "../content/" + topic + "/" + id + ".txt";
+  path = "./content/" + topic + "/" + id + ".txt";
   fetch(path)
   .then((res) => res.text())
   .then((text) => {
     // do something with "text"
-    console.log(text);
+    //console.log(text);
     const body = document.getElementById('tabcontent').getElementsByClassName("tabbody");
-    console.log(body[0]);
+    //console.log(body[0]);
     body[0].innerHTML = text;
+    
     
    })
   .catch((e) => console.error(e));
@@ -208,6 +354,15 @@ function closeNav() {
 
 function closeLoading() {
   document.getElementById("loadingScreen").style.height = "0";
+  loaded = true;
+}
+
+function openIntro() {
+  document.getElementById("intro").style.height = "100%";
+}
+
+function closeIntro() {
+  document.getElementById("intro").style.height = "0";
 }
 
 function updateTopic(evt, topic) {
@@ -216,6 +371,10 @@ function updateTopic(evt, topic) {
   tablinks = document.getElementsByClassName("tablinks");
   console.log(size);
   console.log(tablinks.length);
+
+  // update tab title
+  tabtitle = document.getElementById("tabtitle");
+  tabtitle.innerHTML = topic;
 
   for (i = 1; i < tablinks.length; i++) {
     tablinks[i].style.display = "none";
@@ -236,7 +395,7 @@ function getTabCount() {
       "Content-Type": "application/json",
     },
   });
-  console.log(request);
+  //console.log(request);
   fetch(request)
     .then(response => {
       if (!response.ok) {
@@ -289,22 +448,52 @@ async function checkSubmission(id, topic) {
   console.log(id +", " + topic);
   
   let short_map = new Map();
+  console.log(pyodide.globals)
   let map = pyodide.globals.toJs();
-  keys = map.keys().toArray();
+  //let keys = map.keys().toArray();
+  let keys = Array.from(map.keys());
   for (let i = NUM_DEFAULT_IMPORTS; i < keys.length; i ++) {
     const key = keys[i];
     const val = map[key];
     console.log(key, val, typeof(val));
-    if (typeof(val) === 'object') {
-      // only add obj if it is an Int32Array or normal array
-      if (val.constructor === Int32Array || Array.isArray(val)) {
+    if (globalTopic == 'pfd') {
+      if (typeof(val) === 'object') {
+        //console.log(val.toString());
+        // add obj itself if it is an Int32Array or normal array
+        console.log("is obj");
+        if (val.constructor === Int32Array || Array.isArray(val)) {
+          //console.log("insert array");
+          short_map.set(key, JSON.stringify(val));
+          //console.log(JSON.stringify(val));
+        } else { // otherwise I trust this is a complex obj PyProxy, insert the toString representation
+          //console.log("insert hopefully complex");
+          short_map.set(key, val.toString());
+          //console.log(val.toString());
+        }
+      } else {
+        console.log("not obj");
         short_map.set(key, val);
       }
     } else {
-      short_map.set(key, val);
+      if (typeof(val) === 'object') {
+        //console.log(val.toString());
+        // add obj itself if it is an Int32Array or normal array
+        console.log(key);
+        if (val.constructor === Int32Array || Array.isArray(val)) {
+          //console.log("insert array");
+          short_map.set(key, JSON.stringify(val));
+          //console.log(JSON.stringify(val));
+        } else { // otherwise I trust this is a complex obj PyProxy, insert the toString representation
+          //console.log("insert hopefully complex");
+          short_map.set(key, val.toString());
+          //console.log(val.toString());
+        }
+      } else {
+        short_map.set(key, val);
+      }
     }
   }
-
+  /*
   const str = JSON.stringify(short_map, replacer);
   const newValue = JSON.parse(str, reviver);
  console.log(str);
@@ -313,13 +502,16 @@ async function checkSubmission(id, topic) {
     body: str,
   });
   console.log(request);
+  */
   //first get access to elements
   const container = document.getElementById("tabcontent").getElementsByClassName("result");
   const word = document.getElementById('help');
   const icon = document.getElementById("tabcontent").getElementsByClassName("material-icons left");
+  /*
   console.log('container is ', container);
   console.log('word is ', word);
   console.log('icon is ', icon);
+  
   fetch(request)
     .then(response => {
       if (!response.ok) {
@@ -346,6 +538,52 @@ async function checkSubmission(id, topic) {
   .catch(error => {
       console.error('Fetch error ', error);
   });
+  */
+  path = "./sols/" + topic + "/sol" + id + ".txt";
+  fetch(path)
+  .then((res) => res.text())
+  .then((text) => {
+    // do something with "text"
+    console.log(text);
+    const lines = text.split(/\r?\n/); // supposedly handles both \n and \r\n
+    console.log("split here");
+    console.log(typeof(lines));
+    console.log(lines);
+    let pass = true;
+    container[0].style.display='block';
+
+    console.log(short_map);
+    for (const words of lines) {
+      const parts = words.split(";");
+      console.log("help");
+      console.log(parts);
+      const name = parts[0];
+      //const val = eval(parts[1]);
+      const val = parts[1];
+      console.log("check here");
+      console.log(val);
+        console.log(short_map.get(name));
+      if (!short_map.has(name) || val != short_map.get(name)) {
+        console.log(!short_map.has(name));  // solution map doesn't have this variable
+        console.log(val != short_map.get(name)); // value of this variable is not what the solution says
+        console.log(val);
+        console.log(short_map.get(name));
+        console.log("failed");
+        icon[0].textContent = 'close';
+        icon[0].style.color = 'red'
+        word.textContent = 'wrong'
+        pass = false;
+        break;
+      }
+    }
+    if (pass) {
+      console.log("passed");
+      icon[0].textContent = 'check';
+      icon[0].style.color = 'green'
+      word.textContent = 'correct!'
+    }
+   })
+  .catch((e) => console.error(e));
 }
 
 function hideResult() {
@@ -369,5 +607,9 @@ function clearTabContent() {
 }
 
 window.addEventListener('load', () => {
+  //incrementCounter();
   console.log("fully loaded");
+  loadPyodide_async();
+  updateCounter2();
+  //loadPyodideWithPolling();
 })

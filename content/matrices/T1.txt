@@ -1,1 +1,2 @@
 Create a matrix <b>a2</b> equal to [[4, 5], [6, 7]]
+You can do this with: <blockquote>a2 = np.array([[4, 5], [6, 7]])</blockquote>

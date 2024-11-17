@@ -1,0 +1,6 @@
+forfeit checks, js cannot handle pfd
+Find the partial fraction decomposition of:<img src="./content/pfd/p1.png"/>
+
+Start by creating arrays for the numerator and denominator<blockquote>num = [3, 0]</blockquote><blockquote>denom = [2, -1, -1]</blockquote>
+Because this uses the scipy library and not numpy, we use a different syntax for creating the arrays compared to before.
+Now, solve it with<blockquote>x = scipy.signal.residue(num,denom)</blockquote>

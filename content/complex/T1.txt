@@ -1,0 +1,2 @@
+Create the complex number <b>z</b> and set it equal to 1-7j
+This is achieved with either: <blockquote>z = 1-7j</blockquote> or by: <blockquote>z = complex(1, -7)</blockquote>
