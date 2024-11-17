@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<base href="https://students.washington.edu/myu97/"
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Python Onboard</title>
 		<link rel="stylesheet" href="styles.css">
-		<link rel="icon" type="image/png" href="images/favicon.png">
+
 		<script defer type="text/javascript">
 			window.languagePluginUrl =
 				"https://cdn.jsdelivr.net/pyodide/v0.26.1/full";
@@ -19,7 +20,6 @@
 			rel="stylesheet"
 		/>
 
-		
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
@@ -42,12 +42,20 @@
 	</head>
 	<body>
 		<div id="loadingScreen">
-			<p>loading...</p>
+			<p>loading... please wait</p>
+			<p class="loadingText"></p>
 		</div>
-		
+
+		<div id="intro">
+			<a href="#" class="closebtn" onclick="closeIntro()">&times;</a>
+			<p>add some information about python here and installation instructions</p>
+		</div>
+
 		<div id="sidenav" class="sidenavbar">
+			<!--
 			<a href="#" class="closebtn" onclick="closeNav()">&times;</a>
-			<a href="#">Intro to Python</a>
+			-->
+			<a href="javascript:void(0);" onclick="openIntro()">Intro to Python</a>
 			<a href="javascript:void(0);" onclick="updateTopic(event, 'syntax')" >Basic Syntax</a>
 			<a href="javascript:void(0);" onclick="updateTopic(event, 'arrays')">Arrays</a>
 			<a href="javascript:void(0);" onclick="updateTopic(event, 'matrices')">Matrics</a>
@@ -57,7 +65,7 @@
 		</div>
 		<nav class="navbar">
 			<div class="header-logo">
-				<h3>sample</h3>
+				<h3>python onboard</h3>
 			</div>			
 			<div class="header-link">
 				<button class="btn" id="run-btn">Run</button>
@@ -67,7 +75,6 @@
 		<div class="row">
 			<div class="content" style="float: left; width: 50%">
 				<div class="tab">
-					
 				<button class="tablinks" onclick="openNav()">===</button>
 				<button class="tablinks" onclick="openTab(event, 'T1')">T1</button>
 				<button class="tablinks" onclick="openTab(event, 'T2')">T2</button>
@@ -75,14 +82,13 @@
 				<button class="tablinks" onclick="openTab(event, 'T4')">T4</button>
 				<button class="tablinks" onclick="openTab(event, 'T5')">T5</button>
 				<button class="tablinks" onclick="openTab(event, 'T6')">T6</button>
-
 				</div>
 					
 					<!-- Tab content -->
-				<div id="tabcontent">
-					<h3 class="tabtitle">1</h3>
+				<div id="tabcontent" style="max-height: 80vh; overflow-y: auto">
+					<h3 id="tabtitle">2</h3>
 					<p class="tabbody"></p>
-					<p></p>
+					<!-- <p></p> -->
 					<button class="btn" id="test-btn">Check</button>
 					<p class="result">
 						<i id="result_status" class="material-icons left" style="color: green;">check</i> 
@@ -105,19 +111,15 @@
 					<div id="python-out" style="white-space: pre-line"></div>
 				</div>
 			</div>
-			
-			
 		</div>
-
 
 		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.js"></script>
 		<script defer
 			src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.60.0/mode/python/python.min.js"
 			integrity="sha512-jKm248sXyXbgbigmg1qdHZ7sKnQwpI2CW4Bv1DXbWHWcXRw7nafIjv8dxhbdt5wS0JGrwjxj+hBUEseM/PnjUA=="
-			crossorigin="anonymous"
-		></script>
+			crossorigin="anonymous">
+		</script>
 	
 		<script defer src="src/App.jsx"></script>
-	
 	</body>
 </html>
