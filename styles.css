@@ -3,7 +3,7 @@ html {
   height: 100vh;
   box-sizing: border-box;
   background-color: white;
-  overflow-y: hidden;
+  overflow-y: hidden; /* hidden */
 }
 
 .CodeMirror {
@@ -102,7 +102,7 @@ html {
 
 /* For the tabs */
 .tab {
-  overflow: hidden;
+  overflow: auto; /* hidden */
   border: 1px solid #ccc;
   background-color: #f1f1f1;
 }
@@ -131,16 +131,23 @@ html {
 
 /* Style the tab content */
 #tabcontent {
-  display: none;
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+  /* display: none; */
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
   animation: fadeEffect 1s;
   /* Fading effect takes 1 second */
+  
+  
 }
 
 .tabbody {
   white-space: pre-line;
+  
+  /*height: 400px !important;
+  overflow-y: auto; */
 }
 
 /* Go from zero to full opacity */
@@ -163,7 +170,7 @@ html {
   /* 0px width - make 100% to start with it open */
   position: fixed;
   /* Stay in place */
-  z-index: 6;
+  z-index: 7;
   /* Stay on top */
   top: 0;
   /* Stay at the top */
@@ -191,11 +198,56 @@ html {
   text-align: center;
 }
 
+/* for loading screen */
+#intro {
+	height: 0;
+  /* 100% Full-height */
+  width: 100%;
+  /* 0px width - make 100% to start with it open */
+  position: fixed;
+  /* Stay in place */
+  z-index: 6;
+  /* Stay on top */
+  top: 0;
+  /* Stay at the top */
+  left: 0;
+  background-color: #ffffff;
+  /* Black*/
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  /*padding-top: 60px;*/
+  /* Place content 60px from the top */
+  transition: 0.5s;
+  /* 0.5 second transition effect to slide in the sidenavbar */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Position and style the close button (top right corner) */
+#intro .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#intro p {
+	padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 50px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  text-align: center;
+}
+
 /* The side navigation menu */
 .sidenavbar {
   height: 100%;
   /* 100% Full-height */
-  width: 0px;
+  width: 100%;
   /* 0px width - make 100% to start with it open */
   position: fixed;
   /* Stay in place */

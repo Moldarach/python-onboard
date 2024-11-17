@@ -1,0 +1,13 @@
+AuthType Shibboleth
+<IfVersion < 2.4>
+  ShibCompatWith24 on
+</IfVersion>
+ShibRequestSetting requireSession true
+ShibRequestSetting redirectToSSL 443
+#require valid-user
+#require shib-user myu97 paul0
+
+Options -Indexes
+
+RewriteEngine on
+RewriteRule ^about$ test.html [NC]
